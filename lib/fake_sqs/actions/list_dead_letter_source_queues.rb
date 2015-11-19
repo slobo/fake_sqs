@@ -1,9 +1,11 @@
+require 'fake_sqs/helpers'
+
 module FakeSQS
   module Actions
     class ListDeadLetterSourceQueues
 
       def initialize(options = {})
-        @server    = options.fetch(:server)
+        @request   = options.fetch(:request)
         @queues    = options.fetch(:queues)
         @responder = options.fetch(:responder)
       end
@@ -16,7 +18,7 @@ module FakeSQS
         end
         @responder.call :ListDeadLetterSourceQueues do |xml|
           queue_urls.each do |queue|
-            xml.QueueUrl @server.url_for(queue.name)
+            xml.QueueUrl FakeSQS::Helpers.queue_url(@request, queue.name)
           end
         end
       end
