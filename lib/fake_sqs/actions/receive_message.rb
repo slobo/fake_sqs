@@ -20,7 +20,7 @@ module FakeSQS
           filtered_message_attribute_names << value
         end
 
-        messages = queue.receive_message(params)
+        messages = queue.receive_message(params.merge(queues: @queues))
         @responder.call :ReceiveMessage do |xml|
           messages.each do |receipt, message|
             xml.Message do
